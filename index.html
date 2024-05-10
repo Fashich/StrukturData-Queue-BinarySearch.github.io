@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .toggle:not(:checked) ~ .flip-card__inner {
+            transform: rotateY(0deg); /* Mengembalikan kartu ke posisi awal */
+        }
+        
+        .toggle:not(:checked) ~ .flip-card__front {
+            box-shadow: 4px 4px var(--main-color); /* Mengembalikan shadow kartu depan */
+        }
+        .code {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-left: 5px solid #007bff; 
+            background-color: #f8f9fa; 
+            color: #333;
+            overflow-x: auto;
+            text-align: left; /* Align the text to the left */
+        }
+        .code pre {
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap; 
+            tab-size: 4;
+        }
+        .wrapper {
+            --input-focus: #f02d2d;
+            --font-color: #323232;
+            --font-color-sub: #666;
+            --bg-color: #fff;
+            --bg-color-alt: #666;
+            --main-color: #323232;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-top: 250px;
+          }
+          /* switch card */
+          .switch {
+            transform: translateY(-200px);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            width: 50px;
+            height: 20px;
+          }
+          
+          .card-side::before {
+            position: absolute;
+            content: 'Queue';
+            left: -70px;
+            top: 0;
+            width: 100px;
+            text-decoration: underline;
+            color: var(--font-color);
+            font-weight: 600;
+          }
+          
+          .card-side::after {
+            position: absolute;
+            content: 'BinarySearch';
+            left: 70px;
+            top: 0;
+            width: 100px;
+            text-decoration: none;
+            color: var(--font-color);
+            font-weight: 600;
+          }
+          
+          .toggle {
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+          
+          .slider {
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-colorcolor);
+            transition: 0.3s;
+          }
+          
+          .slider:before {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            border: 2px solid var(--main-color);
+            border-radius: 5px;
+            left: -2px;
+            bottom: 2px;
+            background-color: var(--bg-color);
+            box-shadow: 0 3px 0 var(--main-color);
+            transition: 0.3s;
+          }
+          
+          .toggle:checked + .slider {
+            background-color: var(--input-focus);
+          }
+          
+          .toggle:checked + .slider:before {
+            transform: translateX(30px);
+          }
+          
+          .toggle:checked ~ .card-side:before {
+            text-decoration: none;
+          }
+          
+          .toggle:checked ~ .card-side:after {
+            text-decoration: underline;
+          }
+          
+          /* card */ 
+          
+          .flip-card__inner {
+            width: 1050px;
+            height: 350px;
+            position: relative;
+            background-color: transparent;
+            perspective: 1000px;
+              /* width: 100%;
+              height: 100%; */
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+          }
+          
+          .toggle:checked ~ .flip-card__inner {
+            transform: rotateY(180deg);
+          }
+          
+          .toggle:checked ~ .flip-card__front {
+            box-shadow: none;
+          }
+          
+          .flip-card__front, .flip-card__back {
+            padding: 20px;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background: lightgrey;
+            gap: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+          }
+          
+          .flip-card__back {
+            width: 100%;
+            transform: rotateY(180deg);
+          }
+          
+          .flip-card__form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+          }
+          
+          .title {
+            margin: 20px 0 20px 0;
+            font-size: 25px;
+            font-weight: 900;
+            text-align: center;
+            color: var(--main-color);
+          }
+          
+          .flip-card__input {
+            width: 250px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--font-color);
+            padding: 5px 10px;
+            outline: none;
+          }
+          
+          .flip-card__input::placeholder {
+            color: var(--font-color-sub);
+            opacity: 0.8;
+          }
+          
+          .flip-card__input:focus {
+            border: 2px solid var(--input-focus);
+          }
+          
+          .flip-card__btn:active, .button-confirm:active {
+            box-shadow: 0px 0px var(--main-color);
+            transform: translate(3px, 3px);
+          }
+          
+          .flip-card__btn {
+            margin: 20px 0 20px 0;
+            width: 120px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--font-color);
+            cursor: pointer;
+          } 
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="card-switch">
+            <label class="switch">
+               <input class="toggle" type="checkbox">
+               <span class="slider"></span>
+               <span class="card-side"></span>
+               <div class="flip-card__inner">
+                  <div class="flip-card__front">
+                     <div class="title">pre 1.1 jelaskan struktur data queue</div>
+                     <div class="code">
+                     <pre><code>
+                        using System;
+                        using System.Collections.Generic;
+                        using System.Linq;
+                        using System.Text;
+                        using System.Threading.Tasks;
+                        
+                        namespace Pre_1._1_jelaskan_program_Queue
+                        {
+                            internal class Program
+                            {
+                                static int dayatampungintegermaksimal = 10;
+                                static int dayatampungstringmaksimal = 50;
+                                static void Main()
+                                {
+                                    Queue< int> integerqueue = new Queue< int>();
+                                    Queue< string> stringqueue = new Queue< string>();
+                                    Console.WriteLine("Masukkan jumlah baris elemen integer untuk awal queue:");
+                                    if (int.TryParse(Console.ReadLine(), out int jumlahBarisInteger))
+                                    {
+                                        if (jumlahBarisInteger > dayatampungintegermaksimal)
+                                        {
+                                            Console.WriteLine($"Jumlah baris melebihi kapasitas maksimum. Maksimum: {dayatampungintegermaksimal}");
+                                            return;
+                                        }
+                        
+                                        for (int i = 0; i < jumlahBarisInteger; i++)
+                                        {
+                                            Console.WriteLine($"Masukkan elemen integer untuk baris ke-{i + 1}:");
+                                            if (int.TryParse(Console.ReadLine(), out int integerinitialelemen))
+                                            {
+                                                integerqueue.Enqueue(integerinitialelemen);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine($"Input kamu tidak valid untuk baris integer ke-{i + 1}. Menggunakan nilai default (0).");
+                                                integerqueue.Enqueue(0);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Input kamu tidak valid. Menggunakan nilai default (0).");
+                                    }
+                        
+                                    Console.WriteLine("");
+                                    Console.WriteLine("Masukkan jumlah baris elemen string untuk awal queue:");
+                                    if (int.TryParse(Console.ReadLine(), out int jumlahBarisString))
+                                    {
+                                        if (jumlahBarisString > dayatampungstringmaksimal)
+                                        {
+                                            Console.WriteLine($"Jumlah baris melebihi kapasitas maksimum. Maksimum: {dayatampungstringmaksimal}");
+                                            return;
+                                        }
+                        
+                                        for (int i = 0; i < jumlahBarisString; i++)
+                                        {
+                                            Console.WriteLine($"Masukkan elemen string untuk baris ke-{i + 1}:");
+                                            string stringinitialelemen = Console.ReadLine();
+                                            stringqueue.Enqueue(stringinitialelemen);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Input kamu tidak valid. Menggunakan nilai default (kosong).");
+                                    }
+                                    while (true)
+                                    {
+                                        Console.WriteLine("");
+                                        Console.WriteLine("Menu Queue:");
+                                        Console.WriteLine("1. Tambahkan elemen integer ke dalam queue (integerenqueue)");
+                                        Console.WriteLine("2. Hapus elemen integer dari queue (integerdequeue)");
+                                        Console.WriteLine("3. Lihat elemen integer pertama dan terakhir di queue (peek(headinteger))");
+                                        Console.WriteLine("4. Tambahkan elemen string ke dalam queue (stringenqueue)");
+                                        Console.WriteLine("5. Hapus elemen string dari queue (stringdequeue)");
+                                        Console.WriteLine("6. Lihat elemen string pertama di queue (peek(headstring))");
+                                        Console.WriteLine("7. Hapus semua elemen dari queue (clear)");
+                                        Console.WriteLine("8. Cek apakah elemen tertentu ada di queue (contains)");
+                                        Console.WriteLine("9. Salin elemen integer queue ke array (copyto)");
+                                        Console.WriteLine("10. Salin elemen string queue ke array (copyto)");
+                                        Console.WriteLine("11. Konversi integer queue ke array (toarray)");
+                                        Console.WriteLine("12. Konversi string queue ke array (toarray)");
+                                        Console.WriteLine("13. Mengurangi kapasitas integer queue agar sesuai dengan jumlah elemen yang ada (integer trimexcess)");
+                                        Console.WriteLine("14. Mengurangi kapasitas string queue agar sesuai dengan jumlah elemen yang ada (string trimexcess)");
+                                        Console.WriteLine("15. Iterator untuk integer queue");
+                                        Console.WriteLine("16. Iterator untuk string queue");
+                                        Console.WriteLine("17. Tampilkan isi integer queue");
+                                        Console.WriteLine("18. Tampilkan isi string queue");
+                                        Console.WriteLine("19. Menukar posisi elemen integer dalam queue (integer swap)");
+                                        Console.WriteLine("20. Menukar posisi elemen string dalam queue (string swap)");
+                                        Console.WriteLine("21. Tampilkan nilai yang keluar dari queue integer beserta jumlahnya");
+                                        Console.WriteLine("22. Tampilkan nilai yang keluar dari queue string beserta jumlahnya");
+                                        Console.WriteLine("23. Lakukan queue pada queue integer");
+                                        Console.WriteLine("24. Lakukan queue pada queue string");
+                                        Console.WriteLine("25. Hapus elemen integer tertentu dari queue (integerremove)");
+                                        Console.WriteLine("26. Hapus elemen string tertentu dari queue (stringremove)");
+                                        Console.WriteLine("27. Tambahkan kapasitas queue integer sesuai jumlah elemen (addexcess)");
+                                        Console.WriteLine("28. Tambahkan kapasitas queue string sesuai jumlah elemen (addexcess)");
+                                        Console.WriteLine("29. Reset");
+                                        Console.WriteLine("30. Restart dari awal");
+                                        Console.WriteLine("31. Keluar");
+                                        Console.WriteLine("Pilih opsi:");
+                                        int opsi;
+                                        if (!int.TryParse(Console.ReadLine(), out opsi))
+                                        {
+                                            Console.WriteLine("Opsi kamu ngga valid. Silakan masukkan opsi yang valid.");
+                                            continue;
+                                        }
+                                        switch (opsi)
+                                        {
+                                            case 1:
+                                                Console.WriteLine("Masukkan elemen integer untuk ditambahkan ke dalam queue:");
+                                                if (int.TryParse(Console.ReadLine(), out int inputaninteger))
+                                                {
+                                                    integerqueue.Enqueue(inputaninteger);
+                                                    Console.WriteLine("Elemen integer berhasil ditambahkan ke dalam queue.");
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Input kamu ngga valid. Silakan masukkan elemen yang valid.");
+                                                }
+                                                break;
+                                            case 2:
+                                                if (integerqueue.Count > 0)
+                                                {
+                                                    int integerdequeued = integerqueue.Dequeue();
+                                                    Console.WriteLine("Elemen integer yang dihapus dari queue: " + integerdequeued);
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Queue integer kosong.");
+                                                }
+                                                break;
+                                            case 3:
+                                                if (integerqueue.Count > 0)
+                                                {
+                                                    int headInteger = integerqueue.Peek();
+                                                    int tailInteger = integerqueue.Last();
+                                                    Console.WriteLine("Elemen integer pertama di queue: " + headInteger);
+                                                    Console.WriteLine("Elemen integer terakhir di queue: " + tailInteger);
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Queue integer kosong.");
+                                                }
+                                                break;
+                                            case 4:
+                                                Console.WriteLine("Masukkan elemen string untuk ditambahkan ke dalam queue:");
+                                                string inputanstring = Console.ReadLine();
+                                                stringqueue.Enqueue(inputanstring);
+                                                Console.WriteLine("Elemen string berhasil ditambahkan ke dalam queue.");
+                                                break;
+                                            case 5:
+                                                if (stringqueue.Count > 0)
+                                                {
+                                                    string stringdequeued = stringqueue.Dequeue();
+                                                    Console.WriteLine("Elemen string yang dihapus dari queue: " + stringdequeued);
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Queue string kosong.");
+                                                }
+                                                break;
+                                            case 6:
+                                                if (stringqueue.Count > 0)
+                                                {
+                                                    string stringpeeked = stringqueue.Peek();
+                                                    Console.WriteLine("Elemen string pertama di queue: " + stringpeeked);
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Queue string kosong.");
+                                                }
+                                                break;
+                                            case 7:
+                                                integerqueue.Clear();
+                                                stringqueue.Clear();
+                                                Console.WriteLine("Semua elemen berhasil dihapus dari queue.");
+                                                break;
+                                            case 8:
+                                                Console.WriteLine("Masukkan elemen integer yang ingin dicek keberadaannya di queue:");
+                                                int checkelemeninteger;
+                                                if (int.TryParse(Console.ReadLine(), out checkelemeninteger))
+                                                {
+                                                    bool berisi = integerqueue.Contains(checkelemeninteger);
+                                                    Console.WriteLine("Elemen integer " + checkelemeninteger + " " + (berisi ? "ada" : "tidak ada") + " di dalam queue.");
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Input kamu ngga valid. Silakan masukkan elemen yang valid.");
+                                                }
+                                                break;
+                                            case 9:
+                                                int[] integerarray = new int[integerqueue.Count];
+                                                integerqueue.CopyTo(integerarray, 0);
+                                                Console.WriteLine("Elemen queue integer berhasil disalin ke dalam array:");
+                                                foreach (int unit in integerarray)
+                                                {
+                                                    Console.Write(unit + " ");
+                                                }
+                                                Console.WriteLine();
+                                                break;
+                        
+                                            case 10:
+                                                string[] stringArray = new string[stringqueue.Count];
+                                                stringqueue.CopyTo(stringArray, 0);
+                                                Console.WriteLine("Elemen string queue berhasil disalin ke dalam array:");
+                                                foreach (string unit in stringArray)
+                                                {
+                                                    Console.Write(unit + " ");
+                                                }
+                                                Console.WriteLine();
+                                                break;
+                                            case 11:
+                                                int[] integerqueuearray = integerqueue.ToArray();
+                                                Console.WriteLine("Konversi integer queue ke array:");
+                                                foreach (int unit in integerqueuearray)
+                                                {
+                                                    Console.Write(unit + " ");
+                                                }
+                                                Console.WriteLine();
+                                                break;
+                                            case 12:
+                                                string[] stringqueuearray = stringqueue.ToArray();
+                                                Console.WriteLine("Konversi string queue ke array:");
+                                                foreach (string unit in stringqueuearray)
+                                                {
+                                                    Console.Write(unit + " ");
+                                                }
+                                                Console.WriteLine();
+                                                break;
+                                            case 13:
+                                                Console.WriteLine("Masukkan jumlah elemen yang ingin disisakan di dalam queue integer:");
+                                                if (int.TryParse(Console.ReadLine(), out int jumlahSisakan))
+                                                {
+                                                    TrimExcessInteger(integerqueue, jumlahSisakan);
+                                                    Console.WriteLine("Kapasitas integer queue berhasil disesuaikan.");
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Input tidak valid. Silakan masukkan jumlah elemen yang valid.");
+                                                }
+                                                break;
+                                            case 14:
+                                                Console.WriteLine("Masukkan jumlah huruf maksimum yang ingin disisakan di dalam queue string:");
+                                                if (int.TryParse(Console.ReadLine(), out int hurufMaksimum))
+                                                {
+                                                    TrimExcessString(stringqueue, hurufMaksimum);
+                                                    Console.WriteLine("Kapasitas string queue berhasil disesuaikan.");
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Input tidak valid. Silakan masukkan jumlah huruf yang valid.");
+                                                }
+                                                break;
+                                            case 15:
+                                                Console.WriteLine("Iterator untuk interger queue:");
+                                                foreach (int unit in integerqueue)
+                                                {
+                                                    Console.Write(unit + " ");
+                                                }
+                                                Console.WriteLine();
+                                                break;
+                                            case 16:
+                                                Console.WriteLine("Iterator untuk string queue:");
+                                                foreach (string unit in stringqueue)
+                                                {
+                                                    Console.Write(unit + " ");
+                                                }
+                                                Console.WriteLine();
+                                                break;
+                                            case 17:
+                                                Console.WriteLine("Isi dari integer queue:");
+                                                menampilkanqueue(integerqueue);
+                                                break;
+                                            case 18:
+                                                Console.WriteLine("Isi dari string queue:");
+                                                menampilkanqueue(stringqueue);
+                                                break;
+                                            case 19:
+                                                Console.WriteLine("Masukkan indeks elemen integer pertama untuk pertukaran: ");
+                                                if (int.TryParse(Console.ReadLine(), out int integerindekspertama))
+                                                {
+                                                    Console.WriteLine("Masukkan indeks elemen integer kedua untuk pertukaran: ");
+                                                    if (int.TryParse(Console.ReadLine(), out int integerindekskedua))
+                                                    {
+                                                        SwapElements(integerqueue, integerindekspertama, integerindekskedua);
+                                                        Console.WriteLine("Elemen integer dalam queue telah ditukar pada posisi " + integerindekspertama + " dan " + integerindekskedua);
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("Input kamu ngga valid. Silakan masukkan indeks yang valid.");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Input kamu ngga valid. Silakan masukkan indeks yang valid.");
+                                                }
+                                                break;
+                                            case 20:
+                                                Console.WriteLine("Masukkan indeks elemen string pertama untuk pertukaran:");
+                                                if (int.TryParse(Console.ReadLine(), out int stringindekspertama))
+                                                {
+                                                    Console.WriteLine("Masukkan indeks elemen string kedua untuk pertukaran:");
+                                                    if (int.TryParse(Console.ReadLine(), out int stringindekskedua))
+                                                    {
+                                                        SwapElements(stringqueue, stringindekspertama, stringindekskedua);
+                                                        Console.WriteLine("Elemen dalam string queue telah ditukar pada posisi " + stringindekspertama + " dan " + stringindekskedua);
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("Input kamu ngga valid. Silakan masukkan indeks yang valid.");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Input kamu ngga valid. Silakan masukkan indeks yang valid.");
+                                                }
+                                                break;
+                                            case 21:
+                                                Console.WriteLine("Nilai yang keluar dari queue integer:");
+                                                int jumlahIntegerKeluar = menampilkanNilaiKeluar(integerqueue);
+                                                Console.WriteLine("Jumlah nilai integer yang keluar dari queue: " + jumlahIntegerKeluar);
+                                                break;
+                                            case 22:
+                                                Console.WriteLine("Nilai yang keluar dari queue string:");
+                                                int jumlahStringKeluar = menampilkanNilaiKeluar(stringqueue);
+                                                Console.WriteLine("Jumlah nilai string yang keluar dari queue: " + jumlahStringKeluar);
+                                                break;
+                                            case 23:
+                                                Console.WriteLine("Melakukan queue pada queue integer:");
+                                                lakukanQueue(integerqueue);
+                                                break;
+                                            case 24:
+                                                Console.WriteLine("Melakukan queue pada queue string:");
+                                                lakukanQueue(stringqueue);
+                                                break;
+                                            case 25:
+                                                Console.WriteLine("Masukkan elemen integer yang ingin dihapus dari queue:");
+                                                if (int.TryParse(Console.ReadLine(), out int hapusinteger))
+                                                {
+                                                    hapusElemen(integerqueue, hapusinteger);
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Input tidak valid. Silakan masukkan elemen integer yang ingin dihapus.");
+                                                }
+                                                break;
+                                            case 26:
+                                                Console.WriteLine("Masukkan elemen string yang ingin dihapus dari queue:");
+                                                string hapusstring = Console.ReadLine();
+                                                hapusElemen(stringqueue, hapusstring);
+                                                break;
+                                            case 27:
+                                                integerqueue = TambahKapasitasQueue(integerqueue);
+                                                Console.WriteLine("Kapasitas queue integer berhasil ditambahkan sesuai dengan jumlah elemen yang ada.");
+                                                break;
+                                            case 28:
+                                                stringqueue = TambahKapasitasQueue(stringqueue);
+                                                Console.WriteLine("Kapasitas queue string berhasil ditambahkan sesuai dengan jumlah elemen yang ada.");
+                                                break;
+                                            case 29:
+                                                Console.WriteLine("Apakah kamu yakin ingin mereset semua operasi yang telah dilakukan?");
+                                                Console.WriteLine("Semua operasi yang telah kamu dilakukan akan dihapus.");
+                                                Console.WriteLine("Pilih 'y' untuk ya, atau 'n' untuk tidak.");
+                                                char jawabanopsi29 = Console.ReadKey().KeyChar;
+                                                Console.WriteLine();
+                                                if (jawabanopsi29 == 'y' || jawabanopsi29 == 'Y')
+                                                {
+                                                    integerqueue.Clear();
+                                                    stringqueue.Clear();
+                                                    Console.WriteLine("Semua operasi berhasil direset.");
+                                                }
+                                                else if (jawabanopsi29 == 'n' || jawabanopsi29 == 'N')
+                                                {
+                                                    Console.WriteLine("Reset dibatalkan.");
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Pilihan kamu tidak valid. Reset dibatalkan.");
+                                                }
+                                                break;
+                                            case 30:
+                                                Console.WriteLine("Apakah kamu yakin ingin merestart semua operasi yang telah dilakukan?");
+                                                Console.WriteLine("Semua operasi yang telah kamu dilakukan akan dihapus dan kembali ke awal.");
+                                                Console.WriteLine("Pilih 'y' untuk ya, atau 'n' untuk tidak.");
+                                                char jawabanopsi30 = Console.ReadKey().KeyChar;
+                                                Console.WriteLine();
+                                                if (jawabanopsi30 == 'y' || jawabanopsi30 == 'Y')
+                                                {
+                                                    Console.WriteLine("Semua operasi berhasil direset.");
+                                                    Console.WriteLine("");
+                                                    Restart(out integerqueue, out stringqueue);
+                                                }
+                                                else if (jawabanopsi30 == 'n' || jawabanopsi30 == 'N')
+                                                {
+                                                    Console.WriteLine("Reset dibatalkan.");
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("Pilihan kamu tidak valid. Reset dibatalkan.");
+                                                }
+                                                break;
+                                            case 31:
+                                                Console.WriteLine("Terima kasih telah menggunakan program ini. Sampai jumpa!");
+                                                return;
+                                            default:
+                                                Console.WriteLine("Opsi tidak valid. Silakan pilih opsi yang valid.");
+                                                break;
+                                        }
+                                    }
+                                }
+                                static void menampilkanqueue< Fashich>(Queue< Fashich> queue)
+                                {
+                                    foreach (Fashich unit in queue)
+                                    {
+                                        Console.WriteLine(unit);
+                                    }
+                                    Console.WriteLine();
+                                }
+                                static void SwapElements< Fashich>(Queue< Fashich> queue, int indekspertama, int indekskedua)
+                                {
+                                    Fashich[] array = queue.ToArray();
+                                    if (indekspertama < 0 || indekspertama >= array.Length || indekskedua < 0 || indekskedua >= array.Length)
+                                    {
+                                        Console.WriteLine("Indeksnya tidak valid.");
+                                        return;
+                                    }
+                                    Fashich tempatindekselemen = array[indekspertama];
+                                    array[indekspertama] = array[indekskedua];
+                                    array[indekskedua] = tempatindekselemen;
+                                    queue.Clear();
+                                    foreach (Fashich unit in array)
+                                    {
+                                        queue.Enqueue(unit);
+                                    }
+                                }
+                                static int menampilkanNilaiKeluar< Fashich>(Queue< Fashich> queue)
+                                {
+                                    int hitung = queue.Count;
+                                    for (int i = 0; i < hitung; i++)
+                                    {
+                                        Console.Write(queue.Dequeue() + " ");
+                                    }
+                                    Console.WriteLine();
+                                    return hitung;
+                                }
+                                static void lakukanQueue< Fashich>(Queue< Fashich> queue)
+                                {
+                                    int hitung = queue.Count;
+                                    for (int i = 0; i < hitung; i++)
+                                    {
+                                        Console.WriteLine("melakukan queue: " + queue.Dequeue());
+                                    }
+                                }
+                                static void hapusElemen< Fashich>(Queue< Fashich> queue, Fashich unit)
+                                {
+                                    Queue< Fashich> tempatqueue = new Queue< Fashich>();
+                                    int hitung = queue.Count;
+                                    bool temukan = false;
+                                    for (int i = 0; i < hitung; i++)
+                                    {
+                                        Fashich unitsaatini = queue.Dequeue();
+                                        if (!unitsaatini.Equals(unit))
+                                        {
+                                            tempatqueue.Enqueue(unitsaatini);
+                                        }
+                                        else
+                                        {
+                                            temukan = true;
+                                            Console.WriteLine($"Elemen {unit} telah dihapus dari queue.");
+                                            break;
+                                        }
+                                    }
+                                    if (!temukan)
+                                    {
+                                        Console.WriteLine($"Elemen {unit} tidak ditemukan dalam queue.");
+                                    }
+                                    while (tempatqueue.Count > 0)
+                                    {
+                                        queue.Enqueue(tempatqueue.Dequeue());
+                                    }
+                                }
+                                static Queue< int> TambahKapasitasQueue(Queue< int> queue)
+                                {
+                                    int[] tempatarray = new int[queue.Count];
+                                    queue.CopyTo(tempatarray, 0);
+                                    Queue< int> queuebaru = new Queue< int>(tempatarray);
+                                    return queuebaru;
+                                }
+                                static Queue< string> TambahKapasitasQueue(Queue< string> queue)
+                                {
+                                    string[] tempatarray = new string[queue.Count];
+                                    queue.CopyTo(tempatarray, 0);
+                                    Queue< string> queuebaru = new Queue< string>(tempatarray);
+                                    return queuebaru;
+                                }
+                                static void TrimExcessInteger(Queue< int> queue, int sisahitungan)
+                                {
+                                    if (sisahitungan >= queue.Count)
+                                    {
+                                        return;
+                                    }
+                        
+                                    int[] tempatarray = queue.ToArray();
+                                    queue.Clear();
+                                    foreach (int unit in tempatarray.Skip(tempatarray.Length - sisahitungan))
+                                    {
+                                        queue.Enqueue(unit);
+                                    }
+                                }
+                                static void TrimExcessString(Queue< string> queue, int karaktermaksimal)
+                                {
+                                    if (karaktermaksimal >= queue.Sum(s => s.Length))
+                                    {
+                                        return;
+                                    }
+                                    Queue< string> tempatqueue = new Queue< string>();
+                                    int karaktersaatini = 0;
+                                    while (queue.Count > 0 && karaktersaatini <= karaktermaksimal)
+                                    {
+                                        string unit = queue.Dequeue();
+                                        if (karaktersaatini + unit.Length <= karaktermaksimal)
+                                        {
+                                            tempatqueue.Enqueue(unit);
+                                            karaktersaatini += unit.Length;
+                                        }
+                                        else
+                                        {
+                                            string unitterpotong = unit.Substring(0, karaktermaksimal - karaktersaatini);
+                                            tempatqueue.Enqueue(unitterpotong);
+                                            karaktersaatini += unitterpotong.Length;
+                                            break;
+                                        }
+                                    }
+                                    queue.Clear();
+                                    foreach (string unit in tempatqueue)
+                                    {
+                                        queue.Enqueue(unit);
+                                    }
+                                }
+                                static void Restart(out Queue< int> integerqueue, out Queue< string> stringqueue)
+                                {
+                                    integerqueue = new Queue< int>();
+                                    stringqueue = new Queue< string>();
+                                    const int dayatampungintegermaksimal = 10;
+                                    const int dayatampungstringmaksimal = 50;
+                                    Console.WriteLine("Masukkan jumlah baris elemen integer untuk awal queue:");
+                                    if (int.TryParse(Console.ReadLine(), out int jumlahBarisInteger))
+                                    {
+                                        if (jumlahBarisInteger > dayatampungintegermaksimal)
+                                        {
+                                            Console.WriteLine($"Jumlah baris melebihi kapasitas maksimum. Maksimum: {dayatampungintegermaksimal}");
+                                            return;
+                                        }
+                                        for (int i = 0; i < jumlahBarisInteger; i++)
+                                        {
+                                            Console.WriteLine($"Masukkan elemen integer untuk baris ke-{i + 1}:");
+                                            if (int.TryParse(Console.ReadLine(), out int integerinitialelemen))
+                                            {
+                                                integerqueue.Enqueue(integerinitialelemen);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine($"Input kamu tidak valid untuk baris integer ke-{i + 1}. Menggunakan nilai default (0).");
+                                                integerqueue.Enqueue(0);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Input kamu tidak valid. Menggunakan nilai default (0).");
+                                    }
+                                    Console.WriteLine("");
+                                    Console.WriteLine("Masukkan elemen string untuk awal queue:");
+                                    string inputString = Console.ReadLine();
+                                    if (inputString.Length > dayatampungstringmaksimal)
+                                    {
+                                        Console.WriteLine($"Panjang string melebihi kapasitas maksimum. Maksimum: {dayatampungstringmaksimal} karakter");
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        stringqueue.Enqueue(inputString);
+                                    }
+                                }
+                            }
+                        }
+                     </code></pre>
+                    </div>
+                  </div>
+                  <div class="flip-card__back">
+                     <div class="title">BinarySearch</div>
+                  </div>
+               </div>
+            </label>
+        </div>   
+   </div>
+</body>
+</html>
