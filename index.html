@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmad Fashich Azzuhri Ramadhani</title>
+    <style>
+        body {
+            background-color: #000000;
+        }
+        .card-switch {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .toggle:not(:checked) ~ .flip-card__inner {
+            transform: rotateY(0deg); /* Mengembalikan kartu ke posisi awal */
+        }
+        
+        .toggle:not(:checked) ~ .flip-card__front {
+            box-shadow: 4px 4px var(--main-color); /* Mengembalikan shadow kartu depan */
+        }
+        .code {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-left: 5px solid #007bff; 
+            background-color: #000000; 
+            color: #ffffff;
+            text-align: left; /* Align the text to the left */
+        }
+        .code pre {
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap; 
+            tab-size: 4;
+        }
+        .wrapper {
+            --input-focus: #f02d2d;
+            --font-color: #ffffff;
+            --font-color-sub: #666;
+            --bg-color: #fff;
+            --bg-color-alt: #666;
+            --main-color: #323232;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-top: 250px;
+          }
+          /* switch card */
+          .switch {
+            transform: translateY(-200px);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            width: 50px;
+            height: 20px;
+          }
+          
+          .card-side::before {
+            position: absolute;
+            content: 'Queue';
+            left: -70px;
+            top: 0;
+            width: 100px;
+            text-decoration: underline;
+            color: var(--font-color);
+            font-weight: 600;
+          }
+          
+          .card-side::after {
+            position: absolute;
+            content: 'BinarySearch';
+            left: 70px;
+            top: 0;
+            width: 100px;
+            text-decoration: none;
+            color: var(--font-color);
+            font-weight: 600;
+          }
+          
+          .toggle {
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+          
+          .slider {
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            transition: 0.3s;
+          }
+          
+          .slider:before {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            border: 2px solid var(--main-color);
+            border-radius: 5px;
+            left: -2px;
+            bottom: 2px;
+            background-color: var(--bg-color);
+            box-shadow: 0 3px 0 var(--main-color);
+            transition: 0.3s;
+          }
+          
+          .toggle:checked + .slider {
+            background-color: var(--input-focus);
+          }
+          
+          .toggle:checked + .slider:before {
+            transform: translateX(30px);
+          }
+          
+          .toggle:checked ~ .card-side:before {
+            text-decoration: none;
+          }
+          
+          .toggle:checked ~ .card-side:after {
+            text-decoration: underline;
+          }
+          
+          /* card */ 
+          
+          .flip-card__inner {
+            width: 1050px;
+            height: 350px;
+            position: relative;
+            background-color: transparent;
+            perspective: 1000px;
+              /* width: 100%;
+              height: 100%; */
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+          }
+          
+          .toggle:checked ~ .flip-card__inner {
+            transform: rotateY(180deg);
+          }
+          
+          .toggle:checked ~ .flip-card__front {
+            box-shadow: none;
+          }
+          
+          .flip-card__front, .flip-card__back {
+            padding: 20px;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background: lightgrey;
+            gap: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            box-shadow: 4px 4px var(--main-color);
+          }
+          
+          .flip-card__back {
+            width: 100%;
+            transform: rotateY(180deg);
+          }
+          
+          .flip-card__form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+          }
+          
+          .title {
+            margin: 20px 0 20px 0;
+            font-size: 25px;
+            font-weight: 900;
+            text-align: center;
+            color: var(--main-color);
+          }
+          
+          .flip-card__input {
+            width: 250px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--font-color);
+            padding: 5px 10px;
+            outline: none;
+          }
+          
+          .flip-card__input::placeholder {
+            color: var(--font-color-sub);
+            opacity: 0.8;
+          }
+          
+          .flip-card__input:focus {
+            border: 2px solid var(--input-focus);
+          }
+          
+          .flip-card__btn:active, .button-confirm:active {
+            box-shadow: 0px 0px var(--main-color);
+            transform: translate(3px, 3px);
+          }
+          
+          .flip-card__btn {
+            margin: 20px 0 20px 0;
+            width: 120px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid var(--main-color);
+            background-color: var(--bg-color);
+            box-shadow: 4px 4px var(--main-color);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--font-color);
+            cursor: pointer;
+          } 
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="card-switch">
+            <label class="switch">
+               <input class="toggle" type="checkbox">
+               <span class="slider"></span>
+               <span class="card-side"></span>
+               <div class="flip-card__inner">
+                  <div class="flip-card__front">
+                     <div class="title">pre 1.1 jelaskan struktur data queue</div>
+                     <div class="code">
+                     <pre><code>
+                        
+                    </code></pre>
+                    </div>
+                </div>
+                <div class="flip-card__back">
+                    <div class="title">SequentialSearch and splitinallybothsearch</div>
+                <div class="code">
+                <pre><code>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace prepraktikum 1.1 & 1.2_Searching
+{
+    class Program
+    {
+        static int PencarianBeruntun(List< object> array, object elemenarray)
+        {
+            for (int i = 0; i < array.Count; i++)
+            {
+                if (array[i] is int && elemenarray is int)
+                {
+                    if ((int)array[i] == (int)elemenarray) return i;
+                }
+                else if (array[i] is string && elemenarray is string)
+                {
+                    if (((string)array[i]).Equals((string)elemenarray)) return i;
+                }
+            }
+            return -1;
+        }
+        static void Main(string[] args)
+        {
+            Console.Write("Masukkan jumlah elemen dalam array: ");
+            int panjangbaris = int.Parse(Console.ReadLine());
+            List< object> banyakelemen = new List< object>();
+            Console.WriteLine("\nMasukkan elemen-elemen array:");
+            for (int i = 0; i < panjangbaris; i++)
+            {
+                Console.Write("Elemen ke-" + (i + 1) + ": ");
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int nilaiinteger))
+                {
+                    banyakelemen.Add(nilaiinteger);
+                }
+                else
+                {
+                    banyakelemen.Add(input);
+                }
+            }
+            Console.Write("\nMasukkan jumlah nilai yang ingin dicari: ");
+            int nomordarielemen = int.Parse(Console.ReadLine());
+            while (nomordarielemen > panjangbaris)
+            {
+                Console.WriteLine("Jumlah nilai yang dicari tidak boleh lebih dari jumlah elemen dalam array.");
+                Console.Write("Masukkan jumlah nilai yang ingin dicari: ");
+                nomordarielemen = int.Parse(Console.ReadLine());
+            }
+            Console.WriteLine("\nMasukkan nilai-nilai target yang ingin dicari:");
+            for (int i = 0; i < nomordarielemen; i++)
+            {
+                Console.Write((i + 1) + ". ");
+                Console.Write("Masukkan nilai yang ingin dicari: ");
+                string inputelemen = Console.ReadLine();
+                object elemen;
+                if (int.TryParse(inputelemen, out int elemeninteger))
+                {
+                    elemen = elemeninteger ;
+                }
+                else
+                {
+                    elemen = inputelemen;
+                }
+                int resultIndex = PencarianBeruntun(banyakelemen, elemen);
+                if (resultIndex != -1)
+                    Console.WriteLine("Nilai ditemukan pada indeks ke-" + resultIndex);
+                else
+                    Console.WriteLine("Nilai tidak ditemukan dalam array.");
+            }
+        }
+    }
+}
+
+                </code></pre>
+                <div class="title">pre 1.3 sebutkan dan jelaskan keuntungan penggunaan pencarian beruntun dan bagi dua</div>
+                <pre><code>
+                    Pencarian bagi dua, atau binary search, adalah sebuah algoritma pencarian yang digunakan untuk mencari nilai tertentu dalam sebuah himpunan data yang telah diurutkan. Algoritma ini bekerja dengan membagi himpunan data menjadi dua bagian, kemudian memeriksa apakah nilai yang dicari berada di bagian kiri atau kanan dari titik tengah. Proses ini diulang secara rekursif sampai nilai yang dicari ditemukan atau himpunan data tidak dapat dibagi lagi.
+
+                    Keuntungan dari penggunaan binary search sangatlah signifikan, terutama ketika digunakan pada himpunan data yang besar. Pertama, binary search menawarkan kecepatan pencarian yang sangat baik. Algoritma ini memiliki kompleksitas waktu logaritmik, artinya waktu yang dibutuhkan untuk mencari nilai tidak meningkat secara linier dengan jumlah elemen dalam himpunan data, melainkan meningkat secara logaritmik. Hal ini membuatnya sangat efisien untuk himpunan data besar.
+                    
+                    Selain itu, binary search juga efisien dalam penggunaan ruang. Algoritma ini hanya memerlukan sedikit ruang tambahan untuk menyimpan informasi sementara seperti indeks awal dan akhir, serta nilai tengah saat proses pencarian dilakukan. Hal ini berbeda dengan metode pencarian lain seperti pencarian sekuensial yang memerlukan penelusuran linier terhadap seluruh himpunan data.
+                    
+                    Keuntungan lain dari binary search adalah pengurangan waktu pemrosesan. Karena algoritma ini hanya memeriksa satu bagian himpunan data dalam setiap iterasi, jumlah perbandingan yang diperlukan untuk menemukan nilai yang dicari dapat dikurangi secara signifikan. Ini menghasilkan waktu pemrosesan yang lebih sedikit, terutama pada himpunan data yang besar.
+                    
+                    Terakhir, binary search juga dapat diterapkan pada berbagai struktur data, tidak hanya pada array. Algoritma ini dapat digunakan pada struktur data lain seperti binary search tree, yang memungkinkan pencarian nilai dalam himpunan data dengan efisien, serta melakukan operasi tambahan seperti penambahan dan penghapusan elemen dengan kompleksitas waktu yang efisien juga.
+                    
+                    Secara keseluruhan, penggunaan binary search memberikan keuntungan dalam hal kecepatan, efisiensi ruang, pengurangan waktu pemrosesan, dan ketersediaan pada berbagai struktur data. Oleh karena itu, algoritma ini merupakan pilihan yang tepat untuk aplikasi yang memerlukan pencarian yang cepat dan efisien, terutama pada himpunan data yang besar.
+                </code></pre>
+                <div class="title">kegprak 2.1 sequential search</div>
+                <pre><code>
+                    using System;
+                    using System.Collections.Generic;
+                    using System.Linq;
+                    using System.Text;
+                    using System.Threading.Tasks;
+                    
+                    namespace Kegprak_2._1_SequentialSearch
+                    {
+                        internal class Program
+                        {
+                            static int SequentialSearch(int[] array, int elemen)
+                            {
+                                for (int i = 0; i < array.Length; i++)
+                                {
+                                    if (array[i] == elemen)
+                                        return i;
+                                }
+                                return -1;
+                            }
+                            static void Main(string[] args)
+                            {
+                                int[] semuaangka = { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 };
+                                Console.WriteLine("Data dalam array:");
+                                for (int i = 0; i < semuaangka.Length; i++)
+                                {
+                                    Console.WriteLine("elemen ke- " + i + ": " + semuaangka[i]);
+                                }
+                                Console.WriteLine();
+                                Console.Write("Masukkan angka yang ingin dicari: ");
+                                int elemen = int.Parse(Console.ReadLine());
+                                int hasil = SequentialSearch(semuaangka, elemen);
+                                if (hasil != -1)
+                                    Console.WriteLine("Angka ditemukan pada indeks ke-" + hasil);
+                                else
+                                    Console.WriteLine("Angka tidak ditemukan dalam array.");
+                            }
+                        }
+                    }
+                    
+                </code></pre>
+                <div class="title">kegprak 2.2 splitinallybothsearch</div>
+                <pre><code>
+                    using System;
+                    using System.Collections.Generic;
+                    using System.Linq;
+                    using System.Text;
+                    using System.Threading.Tasks;
+                    
+                    namespace kegprak_2._2_Binary_bagi_dua
+                    {
+                        internal class Program
+                        {
+                            static void Main(string[] args)
+                            {
+                                Console.Write("Masukkan jumlah elemen array: ");
+                                int nilai = int.Parse(Console.ReadLine());
+                                int[] array = new int[nilai];
+                                Console.WriteLine("Masukkan elemen array (harus dalam urutan terurut):");
+                                for (int i = 0; i < nilai; i++)
+                                {
+                                    Console.Write("Indeks ke-{0}: ", i + 1);
+                                    array[i] = int.Parse(Console.ReadLine());
+                                }
+                                Console.WriteLine("Elemen awal: {0}, Elemen tengah: {1}, Elemen akhir: {2}", array[0], array[nilai / 2], array[nilai - 1]);
+                                Console.Write("Masukkan dua nilai yang ingin dicari (nilai pertama dan nilai kedua dipisahkan dengan spasi): ");
+                                string[] input = Console.ReadLine().Split(' ');
+                                int nilaipertama = int.Parse(input[0]);
+                                int nilaikedua = int.Parse(input[1]);
+                                int hasilpertama = BinarySearch(array, nilaipertama);
+                                int hasilkedua = BinarySearch(array, nilaikedua);
+                                if (hasilpertama != -1 && hasilkedua != -1)
+                                {
+                                    Console.WriteLine("Nilai {0} ditemukan di indeks {1}", nilaipertama, hasilpertama + 1);
+                                    Console.WriteLine("Nilai {0} ditemukan di indeks {1}", nilaikedua, hasilkedua + 1);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Salah satu atau kedua nilai tidak ditemukan dalam array.");
+                                }
+                                Console.ReadLine();
+                            }
+                            static int BinarySearch(int[] array, int value)
+                            {
+                                int kiri = 0;
+                                int kanan = array.Length - 1;
+                                while (kiri <= kanan)
+                                {
+                                    int tengah = kiri + (kanan - kiri) / 2;
+                                    if (array[tengah] == value)
+                                        return tengah;
+                                    if (array[tengah] < value)
+                                        kiri = tengah + 1;
+                                    else
+                                        kanan = tengah - 1;
+                                }
+                                return -1;
+                            }
+                        }
+                    }
+                    
+                </code></pre>
+                <div class="title">Hasil Praktikum (Prepraktikum + Kegiatan Praktikum)</div>
+                <pre><code>
+                    Kegiatan praktikum 1.1 membahas pencarian beruntun, yaitu metode pencarian sederhana di mana setiap elemen dalam himpunan data secara berurutan diperiksa untuk menemukan nilai yang dicari. Program yang dibuat dalam praktikum ini memungkinkan pengguna untuk memasukkan nilai-nilai ke dalam array dan kemudian melakukan pencarian terhadap nilai tertentu di dalamnya. Hal yang menarik dari praktikum ini adalah kemampuan program untuk menangani pencarian baik untuk nilai integer maupun string.
+
+                    Praktikum 1.2 mendiskusikan tentang pencarian binary, sebuah algoritma pencarian yang efisien yang bekerja dengan himpunan data yang telah diurutkan. Binary search membagi himpunan data menjadi dua bagian, kemudian memeriksa apakah nilai yang dicari berada di bagian kiri atau kanan dari titik tengah. Dengan cara ini, binary search secara signifikan mengurangi jumlah langkah yang diperlukan untuk menemukan nilai, terutama pada himpunan data yang besar dan terurut. Program yang dibuat menggunakan binary search untuk mencari nilai dalam array yang telah diurutkan.
+                    
+                    Praktikum 2.1 kembali menggunakan sequential search, namun kali ini untuk mencari nilai dalam array yang tidak diurutkan. Program ini memungkinkan pengguna untuk memasukkan nilai yang ingin dicari, dan kemudian melakukan pencarian menggunakan metode pencarian beruntun.
+                    
+                    Terakhir, praktikum 2.2 mengeksplorasi penggunaan binary search dalam mencari nilai dalam array yang telah diurutkan. Program yang dibuat memungkinkan pengguna untuk memasukkan nilai-nilai ke dalam array, dan kemudian mencari dua nilai secara bersamaan menggunakan binary search.
+                    
+                    Dengan memahami kedua metode pencarian tersebut, kita dapat mengoptimalkan proses pencarian dalam pengembangan aplikasi, sehingga meningkatkan kinerja dan efisiensi program secara keseluruhan.
+                </code></pre>
+                <div class="title">Kesimpulan</div>
+                <pre><code>
+                    Kegiatan praktikum ini membahas tentang dua metode pencarian yang penting dalam pemrograman: pencarian beruntun (sequential search) dan pencarian bagi dua (binary search).
+
+                    Pencarian beruntun adalah metode sederhana di mana setiap elemen dalam himpunan data secara berurutan diperiksa untuk menemukan nilai yang dicari. Meskipun sederhana, metode ini cukup efektif untuk himpunan data kecil atau tidak terurut.
+                    
+                    Sementara itu, binary search adalah algoritma pencarian yang efisien untuk himpunan data yang telah diurutkan. Algoritma ini membagi himpunan data menjadi dua bagian, kemudian memeriksa apakah nilai yang dicari berada di bagian kiri atau kanan dari titik tengah. Dengan cara ini, binary search mengurangi jumlah langkah yang diperlukan untuk menemukan nilai, terutama pada himpunan data yang besar dan terurut.
+                    
+                    Dengan memahami dan mengimplementasikan kedua metode pencarian ini, pengembang dapat memilih pendekatan yang paling sesuai untuk kebutuhan aplikasi mereka, sehingga meningkatkan kinerja dan efisiensi program secara keseluruhan.
+                </code></pre>
+                <div class="title">Evaluasi 3.1</div>
+                <pre><code>
+                    using System;
+                    using System.Collections.Generic;
+                    using System.Linq;
+                    using System.Text;
+                    using System.Threading.Tasks;
+                    
+                    namespace Evaluasi_3._1_sequentialsearch
+                    {
+                        internal class Program
+                        {
+                            static int SequentialSearch(int[] array, int elemen)
+                            {
+                                for (int i = 0; i < array.Length; i++)
+                                {
+                                    if (array[i] == elemen)
+                                        return i;
+                                }
+                                return -1;
+                            }
+                            static void Main(string[] args)
+                            {
+                                int[] semuaangka = { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 };
+                                Console.WriteLine("Data dalam array:");
+                                for (int i = 0; i < semuaangka.Length; i++)
+                                {
+                                    Console.WriteLine("Index " + i + ": " + semuaangka[i]);
+                                }
+                                Console.WriteLine();
+                                Console.Write("Masukkan angka yang ingin dicari: ");
+                                int elemen = int.Parse(Console.ReadLine());
+                                int hasil = SequentialSearch(semuaangka, elemen);
+                                if (hasil != -1)
+                                {
+                                    Console.WriteLine("Angka ditemukan pada indeks ke-" + hasil);
+                                    Console.WriteLine("Apakah kamu ingin menghapus atau mengganti elemen?");
+                                    Console.WriteLine("aku mau Hapus elemen");
+                                    Console.WriteLine("aku mau Ganti elemen");
+                                    Console.Write("Pilih opsi (1/2): ");
+                                    int opsi = int.Parse(Console.ReadLine());
+                    
+                                    switch (opsi)
+                                    {
+                                        case 1: // Hapus elemen
+                                            for (int i = hasil; i < semuaangka.Length - 1; i++)
+                                            {
+                                                semuaangka[i] = semuaangka[i + 1];
+                                            }
+                                            Array.Resize(ref semuaangka, semuaangka.Length - 1);
+                                            Console.WriteLine("Elemen berhasil dihapus.");
+                                            break;
+                                        case 2:
+                                            Console.Write("Masukkan nilai baru untuk elemen: ");
+                                            int nilaiBaru = int.Parse(Console.ReadLine());
+                                            semuaangka[hasil] = nilaiBaru;
+                                            Console.WriteLine("Elemen berhasil diganti.");
+                                            break;
+                                        default:
+                                            Console.WriteLine("Opsi tidak valid.");
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Angka tidak ditemukan dalam array.");
+                                }
+                                Console.WriteLine("\nData dalam array setelah penghapusan atau penggantian:");
+                                for (int i = 0; i < semuaangka.Length; i++)
+                                {
+                                    Console.WriteLine("elemen ke-" + i + ": " + semuaangka[i]);
+                                }
+                            }
+                        }
+                    }
+                    
+                </code></pre>
+                <div class="title">Evaluasi 3.2</div>
+                <pre><code>
+                    using System;
+                    using System.Collections.Generic;
+                    using System.Linq;
+                    using System.Text;
+                    using System.Threading.Tasks;
+                    
+                    namespace Evaluasi_3._2
+                    {
+                        internal class Program
+                        {
+                            static int PencarianBeruntun(List< object> array, object elemenarray)
+                            {
+                                for (int i = 0; i < array.Count; i++)
+                                {
+                                    if (array[i] is int && elemenarray is int)
+                                    {
+                                        if ((int)array[i] == (int)elemenarray) return i;
+                                    }
+                                    else if (array[i] is string && elemenarray is string)
+                                    {
+                                        if (((string)array[i]).Equals((string)elemenarray)) return i;
+                                    }
+                                }
+                                return -1;
+                            }
+                            static void Main(string[] args)
+                            {
+                                Console.Write("Masukkan jumlah elemen dalam array: ");
+                                int panjangbaris = int.Parse(Console.ReadLine());
+                                List< object> banyakelemen = new List< object>();
+                                Console.WriteLine("\nMasukkan elemen-elemen array:");
+                                for (int i = 0; i < panjangbaris; i++)
+                                {
+                                    Console.Write("Elemen ke-" + (i + 1) + ": ");
+                                    string input = Console.ReadLine();
+                                    if (int.TryParse(input, out int nilaiinteger))
+                                    {
+                                        banyakelemen.Add(nilaiinteger);
+                                    }
+                                    else
+                                    {
+                                        banyakelemen.Add(input);
+                                    }
+                                }
+                                Console.Write("\nMasukkan jumlah nilai yang ingin disisipkan: ");
+                                int nomorData = int.Parse(Console.ReadLine());
+                                Console.WriteLine("\nMasukkan nilai-nilai yang ingin disisipkan:");
+                                for (int i = 0; i < nomorData; i++)
+                                {
+                                    Console.Write((i + 1) + ". ");
+                                    Console.Write("Masukkan nilai yang ingin disisipkan: ");
+                                    string inputelemen = Console.ReadLine();
+                                    object elemen;
+                                    if (int.TryParse(inputelemen, out int elemeninteger))
+                                    {
+                                        elemen = elemeninteger;
+                                    }
+                                    else
+                                    {
+                                        elemen = inputelemen;
+                                    }
+                                    // Memeriksa apakah elemen sudah ada dalam kumpulan data
+                                    int indeks = PencarianBeruntun(banyakelemen, elemen);
+                                    if (indeks != -1)
+                                    {
+                                        Console.WriteLine($"Elemen \"{elemen}\" sudah ada dalam kumpulan data pada indeks {indeks}.");
+                                        Console.WriteLine("Apakah Anda ingin mengedit ulang atau berhenti pengeditan?");
+                                        Console.WriteLine("1. Mengedit ulang");
+                                        Console.WriteLine("2. Berhenti pengeditan");
+                                        Console.Write("Pilih opsi (1/2): ");
+                                        int opsi = int.Parse(Console.ReadLine());
+                                        if (opsi == 1)
+                                        {
+                                            i--; // Kembali ke iterasi sebelumnya agar nilai bisa dimasukkan ulang
+                                            continue;
+                                        }
+                                        else if (opsi == 2)
+                                        {
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Opsi tidak valid. Pengeditan dihentikan.");
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        banyakelemen.Add(elemen);
+                                        Console.WriteLine("Elemen berhasil disisipkan ke dalam kumpulan data.");
+                                    }
+                                }
+                                Console.WriteLine("\nKumpulan data setelah disisipkan nilai-nilai baru:");
+                                for (int i = 0; i < banyakelemen.Count; i++)
+                                {
+                                    Console.WriteLine("elemen ke- " + i + ": " + banyakelemen[i]);
+                                }
+                            }
+                        }
+                    }
+                </code></pre>
+                </div>
+            </div>
+            </div>
+            </label>
+        </div>   
+   </div>
+   <script>
+    alert('pake laptop yaa (>///<)')
+   </script>
+</body>
+</html>
